@@ -51,7 +51,11 @@ airports %>%
   borders("state") +
   geom_point() +
   coord_quickmap()
+```
 
+![Airports that appear as flight destinations](01_destination_airports_map.png)
+
+```r
 # Attach both origin and destination coordinates to every flight
 flights %>%
   left_join(airports, by = c("dest" = "faa")) %>%
@@ -68,7 +72,11 @@ flights %>%
   borders("state") +
   geom_point() +
   coord_quickmap()
+```
 
+![Average arrival delay by destination, June 13 2013 storm event](02_weather_delay_by_destination_jun13.png)
+
+```r
 # Exploring plane age vs. delay: average delay by tail number
 flights %>%
   group_by(tailnum) %>%
@@ -85,8 +93,6 @@ anti_join(flights, airports, by = c("dest" = "faa"))     # destinations missing 
 anti_join(airports, flights, by = c("faa" = "dest"))     # airports never used as a destination
 ```
 
-*(Chart images are included alongside this README in the project folder.)*
-
 ## Key Findings
 
 - **Semi-join mapping:** Plotting only airports that actually appear as flight
@@ -99,12 +105,10 @@ anti_join(airports, flights, by = c("faa" = "dest"))     # airports never used a
   Southeast/mid-Atlantic, consistent with the reported weather disruption.
 - **Missing-data checks:** 2,512 flights had no recorded tail number, meaning
   plane-level analysis (like the age-vs-delay question) can only ever cover a
-  subset of flights. This matters — any conclusion about plane age would need to
-  account for that gap rather than silently drop it.
+  subset of flights.
 - **Unmatched airports:** `anti_join(flights, airports, by = c("dest" = "faa"))`
   found 7,602 flights whose destination code doesn't exist in the airports
-  reference table at all (largely small or military airfields not included in
-  the reference data) — a reminder that "the join worked" and "the join is
+  reference table at all — a reminder that "the join worked" and "the join is
   complete" are two different things worth checking separately.
 
 ## Conclusions
@@ -118,11 +122,9 @@ delay concentrated in the right region.
 
 The plane-age-vs-delay question was set up but not carried to a full conclusion in
 this version of the project — the `anti_join` and missing-tailnum checks above were
-the necessary first step (confirming how much of the dataset can even be used for
-that comparison) before fitting any real model. That's a natural next step if this
-project gets revisited: join `flights` to `planes` on `tailnum`, exclude the
-~2,500 flights with no tail number, and test delay against `year` (as a proxy for
-plane age).
+the necessary first step before fitting any real model. A natural next step: join
+`flights` to `planes` on `tailnum`, exclude the ~2,500 flights with no tail number,
+and test delay against `year` (as a proxy for plane age).
 
 ## References
 
